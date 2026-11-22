@@ -11,15 +11,100 @@
 		<title>PEMBUATAN STRUK</title>
 	</head>
 	<body>
-		<header>
-			<h1>Cutting Database</h1>
-			<p>
-				Input data produksi, hitung jumlah otomatis, dan cetak lembar database.
-			</p>
-		</header>
-    <main>
-      <form action=""></form>
-    </main>
-    <script src="javascript/apps.js"></script>
+		<main>
+			<div class="container">
+				<header>
+					<h1>Database Cutting</h1>
+					<p class="subtitle">Input data produksi, atur ukuran, lalu cetak.</p>
+				</header>
+
+				<section class="panel">
+					<h2>Identitas Produksi</h2>
+					<div class="identity">
+						<div>
+							<label for="roa">No. ROA</label
+							><input
+								id="roa"
+								placeholder="Masukkan nomor ROA" />
+						</div>
+						<div>
+							<label for="babak">Babak</label
+							><input
+								id="babak"
+								placeholder="Masukkan babak" />
+						</div>
+						<div>
+							<label for="wo">Nomor WO</label
+							><input
+								id="wo"
+								placeholder="Masukkan nomor WO" />
+						</div>
+						<div>
+							<label for="kain">Jenis Kain</label
+							><input
+								id="kain"
+								placeholder="Contoh: Carbon" />
+						</div>
+					</div>
+				</section>
+
+				<section class="panel">
+					<div
+						style="
+							display: flex;
+							align-items: center;
+							justify-content: space-between;
+							gap: 12px;
+							flex-wrap: wrap;
+							margin-bottom: 14px;
+						">
+						<h2 style="margin: 0">Tabel Database Cutting</h2>
+						<div
+							class="no-print"
+							style="display: flex; gap: 8px; flex-wrap: wrap">
+							<button
+								class="secondary"
+								onclick="addRow()">
+								＋ Tambah Baris
+							</button>
+							<button
+								class="secondary"
+								onclick="addSize()">
+								＋ Tambah Ukuran
+							</button>
+						</div>
+					</div>
+					<div class="table-wrap">
+						<table id="cuttingTable">
+							<thead id="tableHead"></thead>
+							<tbody id="tableBody"></tbody>
+						</table>
+					</div>
+					<p class="help">
+						Setiap ukuran memiliki PCS/Jm dan RANGE sendiri (nomor awal–akhir).
+						Kolom Jm dan No di sebelah kiri tetap menjadi patokan umum.
+					</p>
+					<div class="actions no-print">
+						<button onclick="printPage()">▣ Cetak</button>
+						<button
+							class="secondary"
+							onclick="ctAction()">
+							C&amp;T
+						</button>
+						<button
+							class="danger"
+							onclick="resetNumbers()">
+							↻ Reset Angka
+						</button>
+						<span
+							class="status"
+							id="status"
+							>1 baris · 2 ukuran</span
+						>
+					</div>
+				</section>
+			</div>
+		</main>
+		<script src="javascript/apps.js"></script>
 	</body>
 </html>
