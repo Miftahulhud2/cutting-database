@@ -46,7 +46,7 @@ h2 {
 }
 .identity {
 	display: grid;
-	grid-template-columns: repeat(4, minmax(0, 1fr));
+	grid-template-columns: repeat(3, minmax(0, 1fr));
 	gap: 14px;
 }
 label {
@@ -241,5 +241,42 @@ button.small {
 	}
 	.subtitle {
 		display: none;
+	}
+}
+
+/* Label C&T (hanya muncul saat tombol C&T dicetak) */
+.label-sheet {
+	display: none;
+}
+@media print {
+	body.print-labels main {
+		display: none;
+	}
+	body.print-labels .label-sheet {
+		display: block;
+	}
+	.label-pair {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 6mm;
+		margin-bottom: 6mm;
+		break-inside: avoid;
+	}
+	.label {
+		border: 1px solid #000;
+		padding: 3mm 4mm;
+		font-size: 11px;
+	}
+	.label-no {
+		font-size: 26px;
+		font-weight: 800;
+		margin-bottom: 2mm;
+	}
+	.label-line {
+		display: flex;
+		justify-content: space-between;
+		gap: 8px;
+		padding: 1px 0;
+		border-top: 1px dotted #888;
 	}
 }
