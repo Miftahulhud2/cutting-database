@@ -1,0 +1,115 @@
+* {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+	padding: 24px 12px 40px;
+	background: #fff;
+	color: #4a4a4a;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 15px;
+	font-weight: bold;
+}
+
+.sheet {
+	max-width: 1080px;
+	margin: 0 auto;
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	column-gap: 40px;
+	row-gap: 34px;
+}
+
+.top {
+	display: grid;
+	grid-template-columns: 92px 1fr;
+	align-items: end;
+}
+
+.label {
+	text-decoration: underline;
+}
+.title {
+	white-space: nowrap;
+}
+
+.grid {
+	display: grid;
+	grid-template-columns: 92px 1.5fr 0.8fr 0.9fr 0.8fr 0.7fr;
+	align-items: center;
+	text-align: center;
+}
+
+.head {
+	padding-top: 2px;
+}
+.cell {
+	padding: 8px 4px;
+	border-left: 1px solid #8f8878;
+}
+.cell.first {
+	border-left: none;
+}
+.cell.last {
+	border-right: 1px solid #8f8878;
+}
+
+@media (max-width: 760px) {
+	.sheet {
+		grid-template-columns: 1fr;
+	}
+	body {
+		font-size: 12px;
+	}
+}
+
+/* ===== CETAK: 1 lembar A4 portrait ===== */
+@page {
+	size: A4 portrait;
+	margin: 10mm 5mm;
+}
+
+@media print {
+	html,
+	body {
+		width: 200mm;
+		margin: 0;
+		padding: 0;
+		background: #fff;
+		color: #000;
+		font-size: 15px;
+		font-weight: bold;
+		-webkit-print-color-adjust: exact;
+		print-color-adjust: exact;
+	}
+
+	.sheet {
+		max-width: none;
+		width: 200mm;
+		margin: 0;
+		grid-template-columns: 1fr 1fr;
+		column-gap: 5mm;
+		row-gap: 34px;
+		page-break-inside: avoid;
+		break-inside: avoid;
+	}
+
+	.block {
+		break-inside: avoid;
+	}
+
+	.top {
+		grid-template-columns: 23mm 1fr;
+	}
+	.grid {
+		grid-template-columns: 23mm 1.5fr 0.8fr 0.9fr 0.8fr 0.7fr;
+	}
+	.cell {
+		padding: 2mm 1mm;
+		border-color: #666;
+	}
+	.no-print {
+		display: none;
+	}
+}
