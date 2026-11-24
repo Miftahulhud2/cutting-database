@@ -280,3 +280,92 @@ button.small {
 		border-top: 1px dotted #888;
 	}
 }
+
+
+/* Pilihan urutan cetak */
+select {
+	border: 1px solid #cbd5e1;
+	border-radius: 9px;
+	padding: 10px 12px;
+	font: inherit;
+	font-size: 14px;
+	background: #fff;
+	color: #1e293b;
+}
+
+/* Cetak Label A4: 2 kolom x (jumlah bagian) baris per lembar */
+.a4-sheet {
+	display: none;
+}
+@page labelA4 {
+	size: A4 portrait;
+	margin: 10mm 5mm;
+}
+@media print {
+	body.print-a4 main {
+		display: none;
+	}
+	body.print-a4 .a4-sheet {
+		display: block;
+	}
+	.a4-sheet {
+		page: labelA4;
+		font-family: Arial, Helvetica, sans-serif;
+		font-size: 15px;
+		font-weight: bold;
+		color: #000;
+		-webkit-print-color-adjust: exact;
+		print-color-adjust: exact;
+	}
+	.a4-page {
+		width: 200mm;
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		column-gap: 5mm;
+		row-gap: 34px;
+		align-content: start;
+		break-after: page;
+		page-break-after: always;
+	}
+	.a4-page:last-child {
+		break-after: auto;
+		page-break-after: auto;
+	}
+	.a4-block {
+		break-inside: avoid;
+		min-width: 0;
+	}
+	.a4-top {
+		display: grid;
+		grid-template-columns: 23mm 1fr;
+		align-items: end;
+	}
+	.a4-part {
+		text-decoration: underline;
+	}
+	.a4-title {
+		white-space: nowrap;
+		overflow: hidden;
+	}
+	.a4-grid {
+		display: grid;
+		grid-template-columns: 23mm 1.5fr 0.8fr 0.9fr 0.8fr 0.7fr;
+		align-items: center;
+		text-align: center;
+	}
+	.a4-head {
+		padding-top: 2px;
+	}
+	.a4-cell {
+		padding: 2mm 1mm;
+		border-left: 1px solid #666;
+		min-width: 0;
+		overflow: hidden;
+	}
+	.a4-cell.a4-first {
+		border-left: none;
+	}
+	.a4-cell.a4-last {
+		border-right: 1px solid #666;
+	}
+}
