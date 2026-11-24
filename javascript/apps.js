@@ -306,7 +306,159 @@ function ctAction() {
 // Kembalikan tampilan normal setelah dialog cetak ditutup
 window.addEventListener('afterprint', () => {
 	document.body.classList.remove('print-labels')
+	document.body.classList.remove('print-a4')
 })
+
+// ===== Cetak Label A4 (2 set per lembar, tiap set berisi semua bagian) =====
+
+// Buat elemen kecil: el('div', 'kelas', 'teks')
+function el(tag, className, text) {
+	const node = document.createElement(tag)
+	if (className) node.className = className
+	if (text !== undefined) node.textContent = text
+	return node
+}
+
+// Kumpulkan semua set label dari tabel
+function buildSets(order) {
+	const get = (id) => document.getElementById(id).value.trim()
+	const base = { title: get('roa'), wo: get('wo'), babak: get('babak') }
+
+	const data = [...document.querySelectorAll('#tableBody tr')].map((tr) => {
+		const inputs = [...tr.querySelectorAll('input')]
+		const awal = inputs[1].value.trim()
+		const akhir = inputs[2].value.trim()
+		return {
+			jm: inputs[0].value.trim(),
+			range: awal && akhir ? awal + '-' + akhir : awal || akhir,
+			cells: sizes.map((_, i) => (inputs[3 + i] ? inputs[3 + i].value : '')),
+		}
+	})
+
+	const sets = []
+	const add = (row, i) => {
+		parseNumbers(row.cells[i]).forEach((no) => {
+			sets.push({
+				...base,
+				size: sizes[i],
+				no: no,
+				pcs: row.jm,
+				range: row.range,
+			})
+		})
+	}
+
+	if (order === 'size') {
+		sizes.forEach((_, i) => data.forEach((row) => add(row, i)))
+	} else {
+		data.forEach((row) => sizes.forEach((_, i) => add(row, i)))
+	}
+	return sets
+}
+
+// Satu blok: nama bagian + judul + tabel WO/SIZE/BABAK/NO/PCS
+function makeA4Block(part, set) {
+	const block = el('div', 'a4-block')
+
+	const top = el('div', 'a4-top')
+	top.append(el('div', 'a4-part', part), el('div', 'a4-title', set.title))
+
+	const grid = el('div', 'a4-grid')
+	grid.append(el('div'))
+	;['WO', 'SIZE', 'BABAK', 'NO', 'PCS'].forEach((h) =>
+		grid.append(el('div', 'a4-head', h)),
+	)
+	grid.append(
+		el('div', 'a4-cell a4-first', set.range),
+		el('div', 'a4-cell', set.wo),
+		el('div', 'a4-cell', set.size),
+		el('div', 'a4-cell', set.babak),
+		el('div', 'a4-cell', set.no),
+		el('div', 'a4-cell a4-last', set.pcs),
+	)
+
+	block.append(top, grid)
+	return block
+}
+
+// Tombol Cetak Label A4
+function printA4() {
+	const sets = buildSets(document.getElementById('printOrder').value)
+	if (sets.length === 0) {
+		alert('Belum ada nomor di tabel untuk dicetak.')
+		return
+	}
+
+	let parts = document
+		.getElementById('parts')
+		.value.split(',')
+		.map((x) => x.trim())
+		.filter(Boolean)
+	if (parts.length === 0) {
+		parts = ['KRAH', 'DEPAN', 'SAMBUNG', 'KANTONG', 'TANGAN', 'MANSET', 'PADDING', 'KLEP']
+	}
+
+	const pages = Math.ceil(sets.length / 2)
+	if (!confirm('Akan mencetak ' + sets.length + ' set label (' + pages + ' lembar A4). Lanjut?')) {
+		return
+	}
+
+	const sheet = document.getElementById('a4Sheet')
+	sheet.innerHTML = ''
+
+	for (let i = 0; i < sets.length; i += 2) {
+		const page = el('div', 'a4-page')
+		parts.forEach((part) => {
+			;[sets[i], sets[i + 1]].forEach((set) => {
+				page.append(set ? makeA4Block(part, set) : el('div'))
+			})
+		})
+		sheet.append(page)
+	}
+
+	document.body.classList.add('print-a4')
+	window.print()
+}
+
+// Isi tabel dengan data contoh dari foto
+function loadExample() {
+	if (!confirm('Isi tabel dengan data contoh dari foto? Data yang ada sekarang akan diganti.')) {
+		return
+	}
+
+	document.getElementById('roa').value = 'CARBON H-GEH / HBE.VP'
+	document.getElementById('babak').value = '7'
+	document.getElementById('wo').value = 'AN.102B'
+
+	sizes = ['1/S', '2/M', '2/M', '3/L', '3/L', '4/XL']
+	makeHeader()
+
+	const body = document.getElementById('tableBody')
+	body.innerHTML = ''
+
+	// [Jm, No awal, No akhir, nomor tiap ukuran...]
+	const example = [
+		[3, 1, 3, 277, 285, 293, 301, 309, 317],
+		[11, 4, 14, 278, 286, 294, 302, 310, 318],
+		[14, 15, 28, 279, 287, 295, 303, 311, 319],
+		[13, 29, 41, 280, 288, 296, 304, 312, 320],
+		[14, 42, 55, 281, 289, 297, 305, 313, 321],
+		[14, 56, 69, 282, 290, 298, 306, 314, 322],
+		[12, 70, 81, 283, 291, 299, 307, 315, 323],
+		[14, 82, 95, 284, 292, 300, 308, 316, 324],
+	]
+
+	example.forEach((values) => {
+		const tr = makeRow()
+		const inputs = [...tr.querySelectorAll('input')]
+		values.forEach((v, i) => {
+			if (inputs[i]) inputs[i].value = v
+		})
+		body.append(tr)
+	})
+
+	updateStatus()
+}
 
 // Inisialisasi tabel
 makeHeader()
