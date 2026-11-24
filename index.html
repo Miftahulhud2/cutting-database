@@ -39,6 +39,12 @@
 								id="wo"
 								placeholder="Masukkan nomor WO" />
 						</div>
+						<div style="grid-column: 1 / -1">
+							<label for="parts">Bagian label (pisahkan dengan koma)</label
+							><input
+								id="parts"
+								value="KRAH, DEPAN, SAMBUNG, KANTONG, TANGAN, MANSET, PADDING, KLEP" />
+						</div>
 					</div>
 				</section>
 
@@ -77,9 +83,22 @@
 					<p class="help">
 						Setiap ukuran memiliki PCS/Jm dan RANGE sendiri (nomor awal–akhir).
 						Kolom Jm dan No di sebelah kiri tetap menjadi patokan umum.
+						Cetak Label A4: setiap nomor di tabel menjadi satu set label (semua bagian), 2 set per lembar A4. No. ROA menjadi judul label, Jm menjadi PCS, dan No Awal–No Akhir menjadi rentang di kolom kiri.
 					</p>
 					<div class="actions no-print">
 						<button onclick="printPage()">▣ Cetak</button>
+						<button onclick="printA4()">▣ Cetak Label A4</button>
+						<select
+							id="printOrder"
+							title="Urutan label saat dicetak">
+							<option value="row">Urutan: per baris</option>
+							<option value="size">Urutan: per ukuran</option>
+						</select>
+						<button
+							class="outline"
+							onclick="loadExample()">
+							Isi contoh dari foto
+						</button>
 						<button
 							class="secondary"
 							onclick="ctAction()">
@@ -102,6 +121,9 @@
 		<section
 			id="labelSheet"
 			class="label-sheet"></section>
+		<section
+			id="a4Sheet"
+			class="a4-sheet"></section>
 		<script src="javascript/apps.js"></script>
 	</body>
 </html>
