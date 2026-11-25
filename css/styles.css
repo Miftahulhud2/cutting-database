@@ -368,4 +368,7 @@ select {
 	.a4-cell.a4-last {
 		border-right: 1px solid #666;
 	}
+	.no-print {
+        display: none !important;
+	}
 }
